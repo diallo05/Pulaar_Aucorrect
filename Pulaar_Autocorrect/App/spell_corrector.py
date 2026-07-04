@@ -5,6 +5,7 @@ et les probabilités d'un corpus.
 
 import re
 import string
+import pickle
 from collections import Counter
 from typing import Dict, List, Set
 
@@ -56,6 +57,21 @@ def build_probabilities_from_corpus(file_path: str) -> Dict[str, float]:
     words = process_text(file_path)
     word_count = get_word_count(words)
     return get_probabilities(word_count)
+
+
+def save_model(probabilities: Dict[str, float], model_path: str) -> None:
+    """Sauvegarde le modèle (dictionnaire de probabilités) dans un fichier pkl."""
+    with open(model_path, 'wb') as f:
+        pickle.dump(probabilities, f)
+    print(f"Modèle sauvegardé dans {model_path}")
+
+
+def load_model(model_path: str) -> Dict[str, float]:
+    """Charge le modèle depuis un fichier pkl."""
+    with open(model_path, 'rb') as f:
+        probabilities = pickle.load(f)
+    print(f"Modèle chargé depuis {model_path}")
+    return probabilities
 
 
 # ---------------------------------------------------------------------------
@@ -276,7 +292,7 @@ def correct_text(
         return corrected_word
 
     corrected_text = WORD_PATTERN.sub(replace_match, text)
-    return corrected_text, corrections
+    return corrected_text
 
 
 # ---------------------------------------------------------------------------
